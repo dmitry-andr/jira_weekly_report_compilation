@@ -189,30 +189,32 @@ for team_member in utils.TEAM_LIST:
     team_member_assignments_in_sprint_JQL = "Sprint in (%s) and type not in (Test) and assignee = %s"
     jqlRunOutput = runJQLstatement(browser_jira, (team_member_assignments_in_sprint_JQL % (utils.SPRINT_IDS_LIST, team_member)))
     print(jqlRunOutput)
-
-    print("Start calculating projects effort distribution : (" + team_member + ")")
-    spTotal = 0
-    sumOfSPPerProjectMap = {}
-    for jqlRow in jqlRunOutput:
-        print("Processing data : " + jqlRow[0] + " " + jqlRow[6])
-        itemProjCode = jqlRow[0].split('-')[0]
-        itemSP = int(jqlRow[6] if (jqlRow[6] != "") else -1)
-        print("Postprocessed data : " + itemProjCode + " " + str(itemSP))
-        if itemSP > 0:
-            spTotal += itemSP
-            if itemProjCode in sumOfSPPerProjectMap.keys():
-                print(itemProjCode + " exists, adding SP value")
-                sumOfSPPerProjectMap[itemProjCode] += itemSP
-            else:
-                print(itemProjCode + " doesn't exist in map, adding with SP value")
-                sumOfSPPerProjectMap[itemProjCode] = itemSP
-    print(team_member + " assignments Total SPs : " + str(spTotal))
-    #reportTextData += " - Total SPs : " + str(spTotal) + " ; "
-    print(sumOfSPPerProjectMap)
-    reportTextData += " Percentage distribution : "
-    for proj, sp_sum in sumOfSPPerProjectMap.items():
-        print(proj + " - " + str(sp_sum/spTotal))
-        reportTextData += proj + " - " + str(round(sp_sum/spTotal, 3)) + " ; "
+    if jqlRunOutput != None:
+        print("Start calculating projects effort distribution : (" + team_member + ")")
+        spTotal = 0
+        sumOfSPPerProjectMap = {}
+        for jqlRow in jqlRunOutput:
+            print("Processing data : " + jqlRow[0] + " " + jqlRow[6])
+            itemProjCode = jqlRow[0].split('-')[0]
+            itemSP = float(jqlRow[6] if (jqlRow[6] != "") else -1)
+            print("Postprocessed data : " + itemProjCode + " " + str(itemSP))
+            if itemSP > 0:
+                spTotal += itemSP
+                if itemProjCode in sumOfSPPerProjectMap.keys():
+                    print(itemProjCode + " exists, adding SP value")
+                    sumOfSPPerProjectMap[itemProjCode] += itemSP
+                else:
+                    print(itemProjCode + " doesn't exist in map, adding with SP value")
+                    sumOfSPPerProjectMap[itemProjCode] = itemSP
+        print(team_member + " assignments Total SPs : " + str(spTotal))
+        #reportTextData += " - Total SPs : " + str(spTotal) + " ; "
+        print(sumOfSPPerProjectMap)
+        reportTextData += " Percentage distribution : "
+        for proj, sp_sum in sumOfSPPerProjectMap.items():
+            print(proj + " - " + str(sp_sum/spTotal))
+            reportTextData += proj + " - " + str(round(sp_sum/spTotal, 3)) + " ; "
+    else:
+        reportTextData += "No SP assignments"
     writeDataToReportFile(reportTextData)
     print("*************************************")
 
