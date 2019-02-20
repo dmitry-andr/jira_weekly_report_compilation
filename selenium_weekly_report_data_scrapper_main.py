@@ -44,11 +44,23 @@ def parsePageData(browser):
         #print("processing : " + str(row.get_attribute('innerHTML')))
         issueType = row.find_element_by_css_selector(".issue-link img").get_attribute('alt')
         issueID = row.find_element_by_css_selector(".issuekey a").get_attribute('innerHTML')
+        print("Processing item : " + issueID)
         issueStatus = row.find_element_by_css_selector(".status span").get_attribute('innerHTML')
-        issueCreatedDate = row.find_element_by_css_selector("td.created time").get_attribute('innerHTML')
-        issueUpdatedDate = row.find_element_by_css_selector("td.updated time").get_attribute('innerHTML')
-        print("issueType : " + issueType + " ; " + "issueID : " + issueID + " ; " + "issueStatus : " + issueStatus + " ; " + "issueCreatedDate : " + issueCreatedDate + " ; " + "issueUpdatedDate : " + issueUpdatedDate)
-        dataRow = [issueID, issueType, issueStatus, issueCreatedDate, issueUpdatedDate]
+        issueCreatedDate = row.find_element_by_css_selector(".created time").get_attribute('innerHTML')
+        issueUpdatedDate = row.find_element_by_css_selector(".updated time").get_attribute('innerHTML')
+        issueAssignee = "Unassigned"
+        issueAssigneeSelector = ".assignee .user-hover"
+        if(check_exists_by_css_selector(row, issueAssigneeSelector)):
+            issueAssignee = row.find_element_by_css_selector(issueAssigneeSelector).get_attribute('innerHTML')
+
+        issueStoryPointsEstimation = row.find_element_by_css_selector(".customfield_10021").get_attribute('innerHTML')
+        issueStoryPointsEstimation = utils.cleanHtmlInnerContent(issueStoryPointsEstimation)
+
+        print("issueType : " + issueType + " ; " + "issueID : " + issueID + " ; " + "issueStatus : " + issueStatus +
+        " ; " + "issueCreatedDate : " + issueCreatedDate + " ; " + "issueUpdatedDate : " + issueUpdatedDate + 
+        " ; " + " assignee : " + issueAssignee + " ; issueSP : " + issueStoryPointsEstimation)
+
+        dataRow = [issueID, issueType, issueStatus, issueCreatedDate, issueUpdatedDate, issueAssignee, issueStoryPointsEstimation]
         pageData.append(dataRow)
     print("Parsing page data - Complete")
 
@@ -164,9 +176,51 @@ print(runJQLstatement(browser_jira, "project=projName and type not in (Sub-task,
 print("*** END OF DEBUG DATA ***")
 '''
 
-print("Report compilation starts")
 
 
+
+print("Team assignments report for Sprint")
+writeDataToReportFile("Team assignments report for Sprint")
+
+print("Team list : " + str(utils.TEAM_LIST))
+for team_member in utils.TEAM_LIST:
+    print("Data processing for : " + team_member)
+    reportTextData = team_member + " : "
+    team_member_assignments_in_sprint_JQL = "Sprint in (%s) and type not in (Test) and assignee = %s"
+    jqlRunOutput = runJQLstatement(browser_jira, (team_member_assignments_in_sprint_JQL % (utils.SPRINT_IDS_LIST, team_member)))
+    print(jqlRunOutput)
+
+    print("Start calculating projects effort distribution : (" + team_member + ")")
+    spTotal = 0
+    sumOfSPPerProjectMap = {}
+    for jqlRow in jqlRunOutput:
+        print("Processing data : " + jqlRow[0] + " " + jqlRow[6])
+        itemProjCode = jqlRow[0].split('-')[0]
+        itemSP = int(jqlRow[6] if (jqlRow[6] != "") else -1)
+        print("Postprocessed data : " + itemProjCode + " " + str(itemSP))
+        if itemSP > 0:
+            spTotal += itemSP
+            if itemProjCode in sumOfSPPerProjectMap.keys():
+                print(itemProjCode + " exists, adding SP value")
+                sumOfSPPerProjectMap[itemProjCode] += itemSP
+            else:
+                print(itemProjCode + " doesn't exist in map, adding with SP value")
+                sumOfSPPerProjectMap[itemProjCode] = itemSP
+    print(team_member + " assignments Total SPs : " + str(spTotal))
+    #reportTextData += " - Total SPs : " + str(spTotal) + " ; "
+    print(sumOfSPPerProjectMap)
+    reportTextData += " Percentage distribution : "
+    for proj, sp_sum in sumOfSPPerProjectMap.items():
+        print(proj + " - " + str(sp_sum/spTotal))
+        reportTextData += proj + " - " + str(round(sp_sum/spTotal, 3)) + " ; "
+    writeDataToReportFile(reportTextData)
+    print("*************************************")
+
+
+
+
+'''
+print("Weekly Report compilation starts")
 
 print("Scope summary(# of items) - Project scope for sprint")
 writeDataToReportFile("Scope summary(# of items) - Project scope for sprint")
@@ -195,6 +249,7 @@ for project in utils.PROJECTS_LIST:
         writeDataToReportFile(project + " : Close time Average(min, max) (days) : " + " : " + str(averTimeToClose) + " (" + str(min(timeToCloseList)) + " , " + str(max(timeToCloseList)) + ")")
     else:
         writeDataToReportFile("Close time (days) : 0")
+'''
 
 '''Commented out as must be run only in prod mode due to possible size of returning data.
 print("Backlog size")

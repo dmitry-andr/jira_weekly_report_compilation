@@ -1,5 +1,6 @@
 from datetime import datetime
 import configparser
+import os
 
 #JIRA connection params
 JIRA_LOGIN_URL = None
@@ -14,6 +15,7 @@ START_DATE_OF_WEEK = None
 END_DATE_OF_WEEK = None
 SPRINT_IDS_LIST = None
 PROJECTS_LIST = []
+TEAM_LIST = []
 #*****************
 
 #Script runtime params
@@ -29,6 +31,14 @@ REPORT_DATA_FOLDER = "generated_data"
 REPORT_DATA_FILE = "weekly_report_data.txt"
 
 def initSettings():
+    if (os.path.isdir(REPORT_DATA_FOLDER)):
+        print(REPORT_DATA_FOLDER + " folder exists - OK")
+    else:
+        print(REPORT_DATA_FOLDER + " folder doesn't exist and will be created")
+        os.makedirs(REPORT_DATA_FOLDER)
+        print(REPORT_DATA_FOLDER + " folder was created - OK")
+
+
     config = configparser.ConfigParser()
     config.read('settings.ini')
     print("Reading settings from properties file")
@@ -51,6 +61,8 @@ def initSettings():
     SPRINT_IDS_LIST = config.get("JIRA JQL params", "sprint_ids_list")
     global PROJECTS_LIST
     PROJECTS_LIST = [e.strip() for e in config.get("JIRA JQL params", "projects_list").split(';')]
+    global TEAM_LIST
+    TEAM_LIST = [e.strip() for e in config.get("JIRA JQL params", "team_list").split(';')]
     global TIMER_INTERVAL
     TIMER_INTERVAL = int(config.get("Script Params", "timer_interval"))
     global TIMER_INTERVAL_SHORT
@@ -90,5 +102,6 @@ def cleanHtmlInnerContent(contentToClean):
     contentToClean = contentToClean.replace("</b>", "")
     contentToClean = contentToClean.replace("<u>", "")
     contentToClean = contentToClean.replace("</u>", "")
+    contentToClean = contentToClean.replace("\n", "")
     
     return contentToClean
