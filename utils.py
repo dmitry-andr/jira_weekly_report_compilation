@@ -24,7 +24,7 @@ MSG_ELEMENT_NOT_FOUND = "ERR : Element not found"
 TIMER_INTERVAL = None
 TIMER_INTERVAL_SHORT = None
 
-REPORT_TYPES_CMD_LINE_ARGS = ["all", "mbrprojstat", "scpsumsprint", "itmsweek", "backlogsize"]
+REPORT_TYPES_CMD_LINE_ARGS = ["all-in development!!!", "mbrprojstat", "scpsumsprint", "itmsweek", "backlogsize"]
 
 DATES_FORMAT = "%Y-%m-%d"  #2018-08-24
 SCRAPPED_DATES_FORMAT = "%d/%b/%y"#13/Aug/18

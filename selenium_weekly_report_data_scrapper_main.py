@@ -119,7 +119,7 @@ def runJQLstatement(browser, jqlStatement):
         
 
     else:
-        print(MSG_ELEMENT_NOT_FOUND)
+        print(utils.MSG_ELEMENT_NOT_FOUND)
     
     print("runJQLstatement completed")
     return jqlResultData
@@ -141,7 +141,6 @@ def teamMemebersAssinmentsInSprintStats():
     print("Team list : " + str(utils.TEAM_LIST))
     for team_member in utils.TEAM_LIST:
         print("Data processing for : " + team_member)
-        reportTextData = team_member + " : "
         team_member_assignments_in_sprint_JQL = "Sprint in (%s) and type not in (Test) and assignee = %s"
         jqlRunOutput = runJQLstatement(browser_jira, (team_member_assignments_in_sprint_JQL % (utils.SPRINT_IDS_LIST, team_member)))
         print(jqlRunOutput)
@@ -163,7 +162,8 @@ def teamMemebersAssinmentsInSprintStats():
                         print(itemProjCode + " doesn't exist in map, adding with SP value")
                         sumOfSPPerProjectMap[itemProjCode] = itemSP
             print(team_member + " assignments Total SPs : " + str(spTotal))
-            #reportTextData += " - Total SPs : " + str(spTotal) + " ; "
+            reportTextData = team_member + " : "
+            reportTextData += " - Total SPs : " + str(spTotal) + "\n   "#To show only projects effort distribution - Just comment this line out
             print(sumOfSPPerProjectMap)
             reportTextData += " Percentage distribution : "
             for proj, sp_sum in sumOfSPPerProjectMap.items():
@@ -224,7 +224,6 @@ def backlogSizeReport():
 # MAIN PROGRAM
 if len(sys.argv) <= 1:
     print("No params passed !!!!!")
-    print("all - genrerates all reports - !!! Can take a lot of time !!!")
     print("supported params : " + str(utils.REPORT_TYPES_CMD_LINE_ARGS))
     sys.exit()
 else:
@@ -233,7 +232,7 @@ else:
             print(param + " - is a wrong parameter; Supported list : " + str(utils.REPORT_TYPES_CMD_LINE_ARGS))
             sys.exit()
 
-print("Starting Selenium script to gather weekly report data from Jira")
+print("Starting Selenium script to gather report data from Jira")
 utils.initSettings()
 
 options = webdriver.ChromeOptions()
@@ -276,16 +275,17 @@ print("*** END OF DEBUG DATA ***")
 
 
 for reportname in sys.argv[1:]:
-    if (reportname == utils.REPORT_TYPES_CMD_LINE_ARGS[0] or reportname == utils.REPORT_TYPES_CMD_LINE_ARGS[1]) :
+    if (reportname == utils.REPORT_TYPES_CMD_LINE_ARGS[1]) :
         teamMemebersAssinmentsInSprintStats()
-    elif (reportname == utils.REPORT_TYPES_CMD_LINE_ARGS[0] or reportname == utils.REPORT_TYPES_CMD_LINE_ARGS[2]):
+    elif (reportname == utils.REPORT_TYPES_CMD_LINE_ARGS[2]):
         scopeSummaryReport()
-    elif (reportname == utils.REPORT_TYPES_CMD_LINE_ARGS[0] or reportname == utils.REPORT_TYPES_CMD_LINE_ARGS[3]):
+    elif (reportname == utils.REPORT_TYPES_CMD_LINE_ARGS[3]):
         deliveredPerWeekWithTimeToClose()
-    elif (reportname == utils.REPORT_TYPES_CMD_LINE_ARGS[0] or reportname == utils.REPORT_TYPES_CMD_LINE_ARGS[4]):
+    elif (reportname == utils.REPORT_TYPES_CMD_LINE_ARGS[4]):
         backlogSizeReport()
     else:
-        print("!!!!! ERROR : If you see this message, there are some issues in logic - check scipt source code !!!")
+        print("!!!!! ERROR : If you see this message, there are some issues in logic - check script source code !!!")
+        sys.exit()
 
 
 
