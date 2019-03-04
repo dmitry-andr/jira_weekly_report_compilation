@@ -144,16 +144,21 @@ def teamMemebersAssinmentsInSprintStats():
         team_member_assignments_in_sprint_JQL = "Sprint in (%s) and type not in (Test) and assignee = %s"
         jqlRunOutput = runJQLstatement(browser_jira, (team_member_assignments_in_sprint_JQL % (utils.SPRINT_IDS_LIST, team_member)))
         print(jqlRunOutput)
+
         if jqlRunOutput != None:
             print("Start calculating projects effort distribution : (" + team_member + ")")
             spTotal = 0
+            itemsAssignedTotal = 0
+            itemsWithSPEstimation = 0
             sumOfSPPerProjectMap = {}
             for jqlRow in jqlRunOutput:
                 print("Processing data : " + jqlRow[0] + " " + jqlRow[6])
+                itemsAssignedTotal += 1
                 itemProjCode = jqlRow[0].split('-')[0]
                 itemSP = float(jqlRow[6] if (jqlRow[6] != "") else -1)
                 print("Postprocessed data : " + itemProjCode + " " + str(itemSP))
                 if itemSP > 0:
+                    itemsWithSPEstimation += 1
                     spTotal += itemSP
                     if itemProjCode in sumOfSPPerProjectMap.keys():
                         print(itemProjCode + " exists, adding SP value")
@@ -163,7 +168,7 @@ def teamMemebersAssinmentsInSprintStats():
                         sumOfSPPerProjectMap[itemProjCode] = itemSP
             print(team_member + " assignments Total SPs : " + str(spTotal))
             reportTextData = team_member + " : "
-            reportTextData += " - Total SPs : " + str(spTotal) + "\n   "#To show only projects effort distribution - Just comment this line out
+            reportTextData += " - Total SPs : " + str(spTotal) + " ; Total items : " + str(itemsAssignedTotal) + "(" + str(itemsWithSPEstimation) + " - estimated) \n   "#To show only projects effort distribution - Just comment this line out
             print(sumOfSPPerProjectMap)
             reportTextData += " Percentage distribution : "
             for proj, sp_sum in sumOfSPPerProjectMap.items():
