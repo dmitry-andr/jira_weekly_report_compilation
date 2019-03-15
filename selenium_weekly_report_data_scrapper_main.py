@@ -124,39 +124,55 @@ def runJQLstatement(browser, jqlStatement):
     print("runJQLstatement completed")
     return jqlResultData
 
-
-def writeDataToReportFile(dataToWrite):
-    reportTextFile = utils.REPORT_DATA_FOLDER + "\\" + utils.REPORT_DATA_FILE
-    print("Writing to file : " + reportTextFile)
-    with open(reportTextFile, "a", encoding='utf-8') as text_file:
-        print(str(dataToWrite), file=text_file)
+def processJQLToParseAssignmentsDetails(team_member, jqlRunOutput):
+    if jqlRunOutput != None:
+        reportText = utils.DATE_TIMESTAMP + " : {"
+        for jqlRow in jqlRunOutput:
+            print("Processing data : " + jqlRow[0] + " " + jqlRow[6])
+            reportText += jqlRow[0] + "-" + jqlRow[2]
+        reportText += "}"
+        utils.appendDataToTeamMemberStatsFile(team_member, reportText)
+    else:
+        print(team_member + " - has no assignments to process for detailed statistics")
 
     return 1
 
 
 def teamMemebersAssinmentsInSprintStats():
     print("Team assignments report for Sprint")
-    writeDataToReportFile("Team assignments report for Sprint")
+    utils.appendDataToReportFile("Team assignments report for Sprint")
 
     print("Team list : " + str(utils.TEAM_LIST))
     for team_member in utils.TEAM_LIST:
         print("Data processing for : " + team_member)
         team_member_assignments_in_sprint_JQL = "Sprint in (%s) and type not in (Test) and assignee = %s"
         jqlRunOutput = runJQLstatement(browser_jira, (team_member_assignments_in_sprint_JQL % (utils.SPRINT_IDS_LIST, team_member)))
-        print(jqlRunOutput)
+        #print(jqlRunOutput)
 
+        processJQLToParseAssignmentsDetails(team_member, jqlRunOutput)
+
+        reportTextData = team_member + " : "
         if jqlRunOutput != None:
             print("Start calculating projects effort distribution : (" + team_member + ")")
             spTotal = 0
             itemsAssignedTotal = 0
             itemsWithSPEstimation = 0
             sumOfSPPerProjectMap = {}
+            countItemsPerProjectMap = {}
             for jqlRow in jqlRunOutput:
                 print("Processing data : " + jqlRow[0] + " " + jqlRow[6])
                 itemsAssignedTotal += 1
                 itemProjCode = jqlRow[0].split('-')[0]
                 itemSP = float(jqlRow[6] if (jqlRow[6] != "") else -1)
                 print("Postprocessed data : " + itemProjCode + " " + str(itemSP))
+
+                #Statistics per items distribution                
+                if itemProjCode in countItemsPerProjectMap.keys():
+                    countItemsPerProjectMap[itemProjCode] += 1
+                else:
+                    countItemsPerProjectMap[itemProjCode] = 1
+
+                #Statistics for story points distribution
                 if itemSP > 0:
                     itemsWithSPEstimation += 1
                     spTotal += itemSP
@@ -166,62 +182,68 @@ def teamMemebersAssinmentsInSprintStats():
                     else:
                         print(itemProjCode + " doesn't exist in map, adding with SP value")
                         sumOfSPPerProjectMap[itemProjCode] = itemSP
+            
             print(team_member + " assignments Total SPs : " + str(spTotal))
-            reportTextData = team_member + " : "
-            reportTextData += " - Total SPs : " + str(spTotal) + " ; Total items : " + str(itemsAssignedTotal) + "(" + str(itemsWithSPEstimation) + " - estimated) \n   "#To show only projects effort distribution - Just comment this line out
+            reportTextData += " - Total SPs : " + str(spTotal) + " ; Total items : " + str(itemsAssignedTotal) + "(" + str(itemsWithSPEstimation) + " - estimated) \n"
             print(sumOfSPPerProjectMap)
-            reportTextData += " Percentage distribution : "
+
+            reportTextData += "   Percentage distribution by items count per Projects : "
+            for proj, itemsCount in countItemsPerProjectMap.items():
+                reportTextData += proj + " - " + str(round(itemsCount/itemsAssignedTotal, 3)) + " ; "
+            reportTextData += "\n"
+
+            reportTextData += "   Percentage distribution per SPs :                     "
             for proj, sp_sum in sumOfSPPerProjectMap.items():
                 print(proj + " - " + str(sp_sum/spTotal))
                 reportTextData += proj + " - " + str(round(sp_sum/spTotal, 3)) + " ; "
         else:
-            reportTextData += "No SP assignments"
-        writeDataToReportFile(reportTextData)
+            reportTextData += "No assignments for projects in list"
+        utils.appendDataToReportFile(reportTextData)
         print("*************************************")
 
 
 def scopeSummaryReport():
     print("Scope summary(# of items) - Project scope for sprint")
-    writeDataToReportFile("Scope summary(# of items) - Project scope for sprint")
+    utils.appendDataToReportFile("Scope summary(# of items) - Project scope for sprint")
     for project in utils.PROJECTS_LIST:
         scope_summary_JQL = "Sprint in (%s) AND type not in(Sub-task, Test) and project='%s'" #"Sprint in (288, 280) AND type not in(Sub-task, Test) and project=ProjName"
         jqlRunOutput = runJQLstatement(browser_jira, (scope_summary_JQL % (utils.SPRINT_IDS_LIST, project)))
-        print(jqlRunOutput)
+        #print(jqlRunOutput)
         reportVal = len(jqlRunOutput) if (jqlRunOutput != None) else 0
-        writeDataToReportFile(project + " : " + str(reportVal))
+        utils.appendDataToReportFile(project + " : " + str(reportVal))
 
 
 
 def deliveredPerWeekWithTimeToClose():
     print("Delivered(closed) items per week")
-    writeDataToReportFile("Delivered(closed) items per week")
+    utils.appendDataToReportFile("Delivered(closed) items per week")
     for project in utils.PROJECTS_LIST:
         delivered_ites_per_week_JQL = "project = '%s' AND status in (Closed, Done) and type not in (Sub-task, Test) and (updatedDate >= '%s' AND updatedDate <= '%s')" #project = "ProjName" AND status in (Closed, Done) and type not in (Sub-task, Test) and (updatedDate >= "2019/01/28" AND updatedDate <= "2019/02/01")
         jqlRunOutput = runJQLstatement(browser_jira, (delivered_ites_per_week_JQL % (project, utils.START_DATE_OF_WEEK, utils.END_DATE_OF_WEEK)))
-        print(jqlRunOutput)
+        #print(jqlRunOutput)
         reportVal = len(jqlRunOutput) if (jqlRunOutput != None) else 0
-        writeDataToReportFile(project + " : " + str(reportVal))
+        utils.appendDataToReportFile(project + " : " + str(reportVal))
         if (jqlRunOutput != None):
             timeToCloseList = []
             for jqlRow in jqlRunOutput or []:
                 timeToCloseList.append(utils.periodForDatesInDays(jqlRow[3], jqlRow[4], utils.SCRAPPED_DATES_FORMAT))
             averTimeToClose = sum(timeToCloseList)/len(timeToCloseList)
             print("Close time(days) : " + str(averTimeToClose) + " (" + str(min(timeToCloseList)) + " , " + str(max(timeToCloseList)) + ")")
-            writeDataToReportFile(project + " : Close time Average(min, max) (days) : " + " : " + str(averTimeToClose) + " (" + str(min(timeToCloseList)) + " , " + str(max(timeToCloseList)) + ")")
+            utils.appendDataToReportFile(project + " : Close time Average(min, max) (days) : " + " : " + str(averTimeToClose) + " (" + str(min(timeToCloseList)) + " , " + str(max(timeToCloseList)) + ")")
         else:
-            writeDataToReportFile("Close time (days) : 0")
+            utils.appendDataToReportFile("Close time (days) : 0")
 
 
 
 def backlogSizeReport():
     print("Backlog size")
-    writeDataToReportFile("Backlog size")
+    utils.appendDataToReportFile("Backlog size")
     for project in utils.PROJECTS_LIST:
         backlog_size_JQL = "project = '%s' AND status in ('To Do', 'In Analysis', 'In Review', 'On Hold', 'Open Issue', Open, Backlog) AND type not in (Sub-task, Test)" #project = ProjName AND status in ("To Do", "In Analysis", "In Review", "On Hold", "Open Issue", Backlog) AND type not in (Sub-task, Test)
         jqlRunOutput = runJQLstatement(browser_jira, (backlog_size_JQL % (project)))
-        print(jqlRunOutput)
+        #print(jqlRunOutput)
         reportVal = len(jqlRunOutput) if (jqlRunOutput != None) else 0
-        writeDataToReportFile(project + " : " + str(reportVal))
+        utils.appendDataToReportFile(project + " : " + str(reportVal))
 
 
 
@@ -236,6 +258,8 @@ else:
         if param not in utils.REPORT_TYPES_CMD_LINE_ARGS:
             print(param + " - is a wrong parameter; Supported list : " + str(utils.REPORT_TYPES_CMD_LINE_ARGS))
             sys.exit()
+
+
 
 print("Starting Selenium script to gather report data from Jira")
 utils.initSettings()

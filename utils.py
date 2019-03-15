@@ -1,4 +1,5 @@
 from datetime import datetime
+from time import gmtime, strftime
 import configparser
 import os
 
@@ -27,9 +28,12 @@ TIMER_INTERVAL_SHORT = None
 REPORT_TYPES_CMD_LINE_ARGS = ["all-in development!!!", "mbrprojstat", "scpsumsprint", "itmsweek", "backlogsize"]
 
 DATES_FORMAT = "%Y-%m-%d"  #2018-08-24
+TIME_FORMAT = "%H:%M:%S"
 SCRAPPED_DATES_FORMAT = "%d/%b/%y"#13/Aug/18
 REPORT_DATA_FOLDER = "generated_data"
 REPORT_DATA_FILE = "weekly_report_data.txt"
+DATE_TIMESTAMP = None
+TIME_TIMESTAMP = None
 
 def initSettings():
     if (os.path.isdir(REPORT_DATA_FOLDER)):
@@ -38,6 +42,10 @@ def initSettings():
         print(REPORT_DATA_FOLDER + " folder doesn't exist and will be created")
         os.makedirs(REPORT_DATA_FOLDER)
         print(REPORT_DATA_FOLDER + " folder was created - OK")
+    
+    global DATE_TIMESTAMP, TIME_TIMESTAMP
+    DATE_TIMESTAMP = strftime(DATES_FORMAT, gmtime())
+    TIME_TIMESTAMP = strftime(TIME_FORMAT, gmtime())
 
 
     config = configparser.ConfigParser()
@@ -106,3 +114,19 @@ def cleanHtmlInnerContent(contentToClean):
     contentToClean = contentToClean.replace("\n", "")
     
     return contentToClean
+
+def appendDataToReportFile(dataToWrite):
+    reportTextFile = REPORT_DATA_FOLDER + "\\" + DATE_TIMESTAMP + "_" + REPORT_DATA_FILE
+    print("Writing to file : " + reportTextFile)
+    with open(reportTextFile, "a", encoding='utf-8') as text_file:
+        print(str(dataToWrite), file=text_file)
+
+    return 1
+
+def appendDataToTeamMemberStatsFile(team_member, dataToWrite):
+    reportTextFile = REPORT_DATA_FOLDER + "\\" + team_member.lower() + ".txt"
+    print("Writing to file : " + reportTextFile)
+    with open(reportTextFile, "a", encoding='utf-8') as text_file:
+        print(str(dataToWrite), file=text_file)
+
+    return 1
