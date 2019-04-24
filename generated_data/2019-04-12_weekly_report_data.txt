@@ -1,6 +1,0 @@
-Backlog size
-National Campus : 50
-Membership : 740
-Net Generation : 579
-Data Management : 86
-Safeplay : 29
