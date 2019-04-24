@@ -1,0 +1,3 @@
+2019-03-21 : {SAF-221|Ready for UAT;SAF-212|Closed;SAF-200|In Progress}
+2019-03-25 : {SAF-221|Ready for UAT;SAF-212|Closed;SAF-193|Done;COM-10399|To-do;COM-10389|Ready for Development}
+2019-04-10 : {SAF-414|In Analysis;SAF-349|In Progress - Dev;NET-10524|In Review;COM-10450|Done;COM-10445|Done;COM-10249|In Review}

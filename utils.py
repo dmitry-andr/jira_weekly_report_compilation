@@ -31,22 +31,17 @@ DATES_FORMAT = "%Y-%m-%d"  #2018-08-24
 TIME_FORMAT = "%H:%M:%S"
 SCRAPPED_DATES_FORMAT = "%d/%b/%y"#13/Aug/18
 REPORT_DATA_FOLDER = "generated_data"
+TEAM_MEMBERS_REPORT_FOLDER = "team_members_statistics"
 REPORT_DATA_FILE = "weekly_report_data.txt"
 DATE_TIMESTAMP = None
 TIME_TIMESTAMP = None
 
 def initSettings():
-    if (os.path.isdir(REPORT_DATA_FOLDER)):
-        print(REPORT_DATA_FOLDER + " folder exists - OK")
-    else:
-        print(REPORT_DATA_FOLDER + " folder doesn't exist and will be created")
-        os.makedirs(REPORT_DATA_FOLDER)
-        print(REPORT_DATA_FOLDER + " folder was created - OK")
+    initFolder(REPORT_DATA_FOLDER)
     
     global DATE_TIMESTAMP, TIME_TIMESTAMP
     DATE_TIMESTAMP = strftime(DATES_FORMAT, gmtime())
     TIME_TIMESTAMP = strftime(TIME_FORMAT, gmtime())
-
 
     config = configparser.ConfigParser()
     config.read('settings.ini')
@@ -82,6 +77,13 @@ def initSettings():
     print("Reading settings from properties file - DONE")
     return 1
 
+def initFolder(folderPath):
+    if (os.path.isdir(folderPath)):
+        print(folderPath + " folder exists - OK")
+    else:
+        print(folderPath + " folder doesn't exist and will be created")
+        os.makedirs(folderPath)
+        print(folderPath + " folder was created - OK")
 
 def periodForDatesInDays(startDate, endDate, datesFormat):
     createdDate = datetime.strptime(startDate, datesFormat)
@@ -124,7 +126,9 @@ def appendDataToReportFile(dataToWrite):
     return 1
 
 def appendDataToTeamMemberStatsFile(team_member, dataToWrite):
-    reportTextFile = REPORT_DATA_FOLDER + "\\" + team_member.lower() + ".txt"
+    memberFolderPath = REPORT_DATA_FOLDER + "\\" + TEAM_MEMBERS_REPORT_FOLDER
+    initFolder(memberFolderPath)
+    reportTextFile = memberFolderPath + "\\" + team_member.lower() + ".txt"
     print("Writing to file : " + reportTextFile)
     with open(reportTextFile, "a", encoding='utf-8') as text_file:
         print(str(dataToWrite), file=text_file)

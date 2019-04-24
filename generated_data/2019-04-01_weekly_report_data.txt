@@ -1,0 +1,11 @@
+Delivered(closed) items per week
+National Campus : 0
+Close time (days) : 0
+Membership : 1
+Membership : Close time Average(min, max) (days) :  : 0.0 (0 , 0)
+Net Generation : 2
+Net Generation : Close time Average(min, max) (days) :  : 639.0 (591 , 687)
+Data Management : 0
+Close time (days) : 0
+Safeplay : 11
+Safeplay : Close time Average(min, max) (days) :  : 7.0 (1 , 27)

@@ -1,0 +1,12 @@
+Backlog size
+National Campus : 54
+Membership : 734
+Net Generation : 576
+Data Management : 86
+Safeplay : 26
+Scope summary(# of items) - Project scope for sprint
+National Campus : 0
+Membership : 9
+Net Generation : 6
+Data Management : 0
+Safeplay : 29

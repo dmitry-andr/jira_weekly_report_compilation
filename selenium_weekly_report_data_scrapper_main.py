@@ -57,7 +57,7 @@ def parsePageData(browser):
         issueStoryPointsEstimation = row.find_element_by_css_selector(".customfield_10021").get_attribute('innerHTML')
         issueStoryPointsEstimation = utils.cleanHtmlInnerContent(issueStoryPointsEstimation)
 
-        print("issueType : " + issueType + " ; " + "issueID : " + issueID + " ; " + "issueStatus : " + issueStatus +
+        print("issueID : " + issueID + " ; "  + "issueType : " + issueType + " ; " + "issueStatus : " + issueStatus +
         " ; " + "issueCreatedDate : " + issueCreatedDate + " ; " + "issueUpdatedDate : " + issueUpdatedDate + 
         " ; " + " assignee : " + issueAssignee + " ; issueSP : " + issueStoryPointsEstimation)
 
@@ -127,9 +127,11 @@ def runJQLstatement(browser, jqlStatement):
 def processJQLToParseAssignmentsDetails(team_member, jqlRunOutput):
     if jqlRunOutput != None:
         reportText = utils.DATE_TIMESTAMP + " : {"
-        for jqlRow in jqlRunOutput:
+        for idx, jqlRow in enumerate(jqlRunOutput):
             print("Processing data : " + jqlRow[0] + " " + jqlRow[6])
-            reportText += jqlRow[0] + "-" + jqlRow[2]
+            reportText += jqlRow[0] + "|" + jqlRow[2]
+            if(idx < (len(jqlRunOutput) - 1)):
+                reportText+= ";"
         reportText += "}"
         utils.appendDataToTeamMemberStatsFile(team_member, reportText)
     else:

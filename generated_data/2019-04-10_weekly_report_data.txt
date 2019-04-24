@@ -1,0 +1,57 @@
+Team assignments report for Sprint
+Davit_Shukhyan :  - Total SPs : 34.0 ; Total items : 8(3 - estimated) 
+   Percentage distribution by items count per Projects : SAF - 0.875 ; COM - 0.125 ; 
+   Percentage distribution per SPs :                     SAF - 0.618 ; COM - 0.382 ; 
+michal_okularczyk :  - Total SPs : 15.0 ; Total items : 9(3 - estimated) 
+   Percentage distribution by items count per Projects : SAF - 0.667 ; COM - 0.333 ; 
+   Percentage distribution per SPs :                     SAF - 0.867 ; COM - 0.133 ; 
+Hanna_Zhahala :  - Total SPs : 0 ; Total items : 4(0 - estimated) 
+   Percentage distribution by items count per Projects : SAF - 0.25 ; NET - 0.75 ; 
+   Percentage distribution per SPs :                     
+Preeti_Rane :  - Total SPs : 14.0 ; Total items : 9(3 - estimated) 
+   Percentage distribution by items count per Projects : SAF - 0.667 ; NET - 0.333 ; 
+   Percentage distribution per SPs :                     SAF - 0.786 ; NET - 0.214 ; 
+Rufat_Feyzullayev :  - Total SPs : 29.0 ; Total items : 7(3 - estimated) 
+   Percentage distribution by items count per Projects : SAF - 0.571 ; COM - 0.429 ; 
+   Percentage distribution per SPs :                     SAF - 0.897 ; COM - 0.103 ; 
+Dzmitry_Kastjuchenka : No assignments for projects in list
+Liubomyr_Lazor : No assignments for projects in list
+Yash_Chandarana :  - Total SPs : 9.0 ; Total items : 6(3 - estimated) 
+   Percentage distribution by items count per Projects : SAF - 0.333 ; NET - 0.167 ; COM - 0.5 ; 
+   Percentage distribution per SPs :                     NET - 0.111 ; COM - 0.889 ; 
+Nitin_Jain :  - Total SPs : 0 ; Total items : 1(0 - estimated) 
+   Percentage distribution by items count per Projects : COM - 1.0 ; 
+   Percentage distribution per SPs :                     
+Ekaterina_Chmileva :  - Total SPs : 2.0 ; Total items : 3(1 - estimated) 
+   Percentage distribution by items count per Projects : SS - 0.333 ; NET - 0.333 ; COM - 0.333 ; 
+   Percentage distribution per SPs :                     COM - 1.0 ; 
+Adrian_Harenczyk :  - Total SPs : 5.0 ; Total items : 2(1 - estimated) 
+   Percentage distribution by items count per Projects : SAF - 0.5 ; COM - 0.5 ; 
+   Percentage distribution per SPs :                     SAF - 1.0 ; 
+Valerii Syrovotka : No assignments for projects in list
+Krystian_Balwierz :  - Total SPs : 27.0 ; Total items : 21(7 - estimated) 
+   Percentage distribution by items count per Projects : SS - 0.714 ; SAF - 0.238 ; COM - 0.048 ; 
+   Percentage distribution per SPs :                     SS - 0.556 ; SAF - 0.444 ; 
+rafal_jaszczynski :  - Total SPs : 2.0 ; Total items : 3(1 - estimated) 
+   Percentage distribution by items count per Projects : SAF - 1.0 ; 
+   Percentage distribution per SPs :                     SAF - 1.0 ; 
+Sebastian_Sobiech :  - Total SPs : 10.0 ; Total items : 2(1 - estimated) 
+   Percentage distribution by items count per Projects : SS - 1.0 ; 
+   Percentage distribution per SPs :                     SS - 1.0 ; 
+Andrei_Piatrushenia : No assignments for projects in list
+Vasily_Lazerko1 :  - Total SPs : 2.0 ; Total items : 4(1 - estimated) 
+   Percentage distribution by items count per Projects : SS - 0.25 ; SAF - 0.5 ; NET - 0.25 ; 
+   Percentage distribution per SPs :                     NET - 1.0 ; 
+Dzianis_Baburkin :  - Total SPs : 13.0 ; Total items : 5(4 - estimated) 
+   Percentage distribution by items count per Projects : SAF - 1.0 ; 
+   Percentage distribution per SPs :                     SAF - 1.0 ; 
+Kateryna_Babynina :  - Total SPs : 2.0 ; Total items : 2(1 - estimated) 
+   Percentage distribution by items count per Projects : COM - 1.0 ; 
+   Percentage distribution per SPs :                     COM - 1.0 ; 
+Ivan_Sydorenko :  - Total SPs : 8.0 ; Total items : 2(2 - estimated) 
+   Percentage distribution by items count per Projects : SAF - 1.0 ; 
+   Percentage distribution per SPs :                     SAF - 1.0 ; 
+Vladyslav_Stetsenko :  - Total SPs : 5.0 ; Total items : 3(2 - estimated) 
+   Percentage distribution by items count per Projects : SAF - 1.0 ; 
+   Percentage distribution per SPs :                     SAF - 1.0 ; 
+Ihor Konobas : No assignments for projects in list

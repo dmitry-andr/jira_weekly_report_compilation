@@ -1,0 +1,17 @@
+Scope summary(# of items) - Project scope for sprint
+National Campus : 0
+Membership : 10
+Net Generation : 5
+Data Management : 1
+Safeplay : 20
+Delivered(closed) items per week
+National Campus : 0
+Close time (days) : 0
+Membership : 348
+Membership : Close time Average(min, max) (days) :  : 415.0890804597701 (1 , 812)
+Net Generation : 10
+Net Generation : Close time Average(min, max) (days) :  : 3.7 (0 , 11)
+Data Management : 0
+Close time (days) : 0
+Safeplay : 5
+Safeplay : Close time Average(min, max) (days) :  : 18.2 (7 , 39)
